@@ -6,6 +6,7 @@ const eventSchema = new Schema({
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },
   timezone: { type: String, required: true },
+  color: { type: String, required: true }
 });
 
 export const Event = model('Event', eventSchema);

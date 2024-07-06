@@ -1,47 +1,43 @@
-// EventList.tsx
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React from 'react';
+import { Container, Typography, Card, CardContent, Grid } from '@mui/material';
+import { Event } from '../types'; // Importez l'interface Event depuis src/types.ts
 
-interface Event {
-  _id: string;
-  name: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-  timezone: string;
+interface EventListProps {
+  events: Event[];
 }
 
-const EventList: React.FC = () => {
-  const [events, setEvents] = useState<Event[]>([]);
-
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await axios.get('http://localhost:3000/events');
-        setEvents(response.data);
-      } catch (error) {
-        console.error("There was an error fetching the events!", error);
-      }
-    };
-
-    fetchEvents();
-  }, []);
-
+const EventList: React.FC<EventListProps> = ({ events }) => {
   return (
-    <div>
-      <h1>Event List</h1>
-      <ul>
+    <Container maxWidth="md">
+      <Typography variant="h4" component="h1" gutterBottom>
+        Event List
+      </Typography>
+      <Grid container spacing={2}>
         {events.map(event => (
-          <li key={event._id}>
-            <h2>{event.name}</h2>
-            <p>{event.description}</p>
-            <p>{new Date(event.startDate).toLocaleString()}</p>
-            <p>{new Date(event.endDate).toLocaleString()}</p>
-            <p>{event.timezone}</p>
-          </li>
+          <Grid item xs={12} sm={6} md={4} key={event._id}>
+            <Card sx={{ backgroundColor: event.color }}>
+              <CardContent>
+                <Typography variant="h6" component="h2">
+                  {event.name}
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  {event.description}
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  {new Date(event.startDate).toLocaleString()}
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  {new Date(event.endDate).toLocaleString()}
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  {event.timezone}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
         ))}
-      </ul>
-    </div>
+      </Grid>
+    </Container>
   );
 };
 

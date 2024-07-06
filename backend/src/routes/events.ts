@@ -4,8 +4,8 @@ import { Event } from '../models/Event';
 const router = express.Router();
 
 router.post('/', async (req, res) => {
-  const { name, description, startDate, endDate, timezone } = req.body;
-  const event = new Event({ name, description, startDate, endDate, timezone });
+  const { name, description, startDate, endDate, timezone, color } = req.body;
+  const event = new Event({ name, description, startDate, endDate, timezone, color });
   await event.save();
   res.status(201).send(event);
 });
