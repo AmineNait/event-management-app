@@ -5,12 +5,22 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { Event, CalendarEvent } from '../types';
 import EventDetailsModal from './EventDetailsModal';
 import momentTimezone from 'moment-timezone';
+import { Typography, Box, styled } from '@mui/material';
 
 const localizer = momentLocalizer(moment);
 
 interface EventCalendarProps {
   events: Event[];
 }
+
+const CalendarContainer = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(3),
+  border: '1px solid #ddd',
+  borderRadius: '8px',
+  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+  backgroundColor: '#fff',
+  marginTop: theme.spacing(4)
+}));
 
 const EventCalendar: React.FC<EventCalendarProps> = ({ events }) => {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
@@ -63,18 +73,21 @@ const EventCalendar: React.FC<EventCalendarProps> = ({ events }) => {
   };
 
   return (
-    <div style={{ height: 500 }}>
+    <CalendarContainer>
       <Calendar
         localizer={localizer}
         events={calendarEvents}
         startAccessor="start"
         endAccessor="end"
-        style={{ height: '100%' }}
+        style={{ height: '500px' }}
         eventPropGetter={eventStyleGetter}
         onSelectEvent={handleSelectEvent}
       />
+      <Typography variant="body2" sx={{ mt: 2, color: 'gray', textAlign: 'center' }}>
+        *All times are in EST timezone.
+      </Typography>
       <EventDetailsModal event={selectedEvent} open={modalOpen} onClose={handleCloseModal} />
-    </div>
+    </CalendarContainer>
   );
 };
 

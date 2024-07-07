@@ -12,6 +12,11 @@ const FormContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2),
+  padding: theme.spacing(3),
+  border: '1px solid #ddd',
+  borderRadius: '8px',
+  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+  backgroundColor: '#fff'
 }));
 
 const ColorBox = styled(Box)({
@@ -22,13 +27,13 @@ const ColorBox = styled(Box)({
 });
 
 const timezones = [
-  'America/Denver',    
-  'America/New_York', 
-  'Europe/London',     
-  'Europe/Berlin',   
-  'Asia/Dubai',        
-  'Asia/Bangkok',   
-  'Asia/Tokyo',        
+  'America/Denver',
+  'America/New_York',
+  'Europe/London',
+  'Europe/Berlin',
+  'Asia/Dubai',
+  'Asia/Bangkok',
+  'Asia/Tokyo',
   'Australia/Sydney'
 ];
 

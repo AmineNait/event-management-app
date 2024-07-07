@@ -57,7 +57,7 @@ const App: React.FC = () => {
         </Box>
         <Box my={4}>
           <Typography variant="h4" component="h2" gutterBottom>
-            Event Calendar (EST)
+            Event Calendar
           </Typography>
           <Typography variant="body1" gutterBottom>
             Click on an event to see more details.
