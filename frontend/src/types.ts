@@ -37,3 +37,9 @@ export interface EventListProps {
 export interface EventCalendarProps {
   events: Event[];
 }
+
+export enum EventColor {
+  Green = '#7cd992',
+  Red = '#eb6060',
+  Yellow = '#f7e463'
+}

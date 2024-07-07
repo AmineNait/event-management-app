@@ -1,147 +1,147 @@
-import React, { useState } from 'react';
+import React from 'react';
 import axios from 'axios';
 import { TextField, Button, Container, Typography, Box, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Event, EventFormProps } from '../types';
 import momentTimezone from 'moment-timezone';
 import { FormContainer, ColorBox, formControlStyles } from './styles';
-
-const timezones = [
-  'America/Denver',
-  'America/New_York',
-  'Europe/London',
-  'Europe/Berlin',
-  'Asia/Dubai',
-  'Asia/Bangkok',
-  'Asia/Tokyo',
-  'Australia/Sydney'
-];
-
-const formattedTimezones = timezones.map(tz => {
-  const offset = momentTimezone.tz(tz).format('Z');
-  return {
-    label: `${tz} (UTC${offset})`,
-    value: tz,
-  };
-});
+import { eventSchema } from '../validationSchema';
+import { colors, formattedTimezones } from '../constants';
 
 const EventForm: React.FC<EventFormProps> = ({ addEvent }) => {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [timezone, setTimezone] = useState('America/New_York'); // Default timezone
-  const [color, setColor] = useState('#7cd992'); // Default color green
+  const initialValues = {
+    name: '',
+    description: '',
+    startDate: '',
+    endDate: '',
+    timezone: 'America/New_York',
+    color: '#7cd992',
+  };
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleSubmit = async (values: typeof initialValues, { resetForm }: { resetForm: () => void }) => {
     try {
-      const startUTC = momentTimezone.tz(startDate, timezone).utc().format();
-      const endUTC = momentTimezone.tz(endDate, timezone).utc().format();
+      const startUTC = momentTimezone.tz(values.startDate, values.timezone).utc().format();
+      const endUTC = momentTimezone.tz(values.endDate, values.timezone).utc().format();
       const response = await axios.post('http://localhost:3000/events', { 
-        name, 
-        description, 
+        name: values.name, 
+        description: values.description, 
         startDate: startUTC, 
         endDate: endUTC, 
-        timezone, 
-        color 
+        timezone: values.timezone, 
+        color: values.color 
       });
       addEvent(response.data);
-      setName('');
-      setDescription('');
-      setStartDate('');
-      setEndDate('');
-      setTimezone('America/New_York'); // Reset to default timezone
-      setColor('#7cd992'); // Reset to default color green
+      resetForm();
     } catch (error) {
       console.error("There was an error creating the event!", error);
     }
   };
-
-  const colors = [
-    { label: 'Green', value: '#7cd992' },
-    { label: 'Red', value: '#eb6060' },
-    { label: 'Yellow', value: '#f7e463' }
-  ];
 
   return (
     <Container maxWidth="sm">
       <Typography variant="h4" component="h1" gutterBottom>
         Create Event
       </Typography>
-      <FormContainer component="form" onSubmit={handleSubmit}>
-        <TextField
-          label="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          inputProps={{ maxLength: 32 }}
-          required
-        />
-        <TextField
-          label="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          multiline
-          rows={4}
-          required
-        />
-        <TextField
-          label="Start Date"
-          type="datetime-local"
-          InputLabelProps={{ shrink: true }}
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-          required
-        />
-        <TextField
-          label="End Date"
-          type="datetime-local"
-          InputLabelProps={{ shrink: true }}
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-          required
-        />
-        <FormControl required>
-          <InputLabel id="timezone-select-label">Timezone</InputLabel>
-          <Select
-            labelId="timezone-select-label"
-            value={timezone}
-            label="Timezone"
-            onChange={(e) => setTimezone(e.target.value as string)}
-            sx={formControlStyles}
-          >
-            {formattedTimezones.map((tz) => (
-              <MenuItem key={tz.value} value={tz.value}>
-                {tz.label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl>
-          <InputLabel id="color-select-label">Color</InputLabel>
-          <Select
-            labelId="color-select-label"
-            value={color}
-            label="Color"
-            onChange={(e) => setColor(e.target.value)}
-            renderValue={(selected) => (
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <ColorBox sx={{ backgroundColor: selected }} />
-                {colors.find(c => c.value === selected)?.label}
-              </Box>
-            )}
-          >
-            {colors.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                <ColorBox sx={{ backgroundColor: option.value }} />
-                {option.label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <Button type="submit" variant="contained" color="primary">
-          Create Event
-        </Button>
-      </FormContainer>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={eventSchema}
+        onSubmit={handleSubmit}
+      >
+        {({ values, handleChange }) => (
+          <Form>
+            <FormContainer>
+              <Field
+                as={TextField}
+                name="name"
+                label="Name"
+                value={values.name}
+                onChange={handleChange}
+                inputProps={{ maxLength: 32 }}
+                required
+              />
+              <ErrorMessage name="name" component="div" />
+              <Field
+                as={TextField}
+                name="description"
+                label="Description"
+                value={values.description}
+                onChange={handleChange}
+                multiline
+                rows={4}
+                required
+              />
+              <ErrorMessage name="description" component="div" />
+              <Field
+                as={TextField}
+                name="startDate"
+                label="Start Date"
+                type="datetime-local"
+                InputLabelProps={{ shrink: true }}
+                value={values.startDate}
+                onChange={handleChange}
+                required
+              />
+              <ErrorMessage name="startDate" component="div" />
+              <Field
+                as={TextField}
+                name="endDate"
+                label="End Date"
+                type="datetime-local"
+                InputLabelProps={{ shrink: true }}
+                value={values.endDate}
+                onChange={handleChange}
+                required
+              />
+              <ErrorMessage name="endDate" component="div" />
+              <FormControl required>
+                <InputLabel id="timezone-select-label">Timezone</InputLabel>
+                <Field
+                  as={Select}
+                  name="timezone"
+                  labelId="timezone-select-label"
+                  value={values.timezone}
+                  onChange={handleChange}
+                  sx={formControlStyles}
+                >
+                  {formattedTimezones.map((tz) => (
+                    <MenuItem key={tz.value} value={tz.value}>
+                      {tz.label}
+                    </MenuItem>
+                  ))}
+                </Field>
+              </FormControl>
+              <ErrorMessage name="timezone" component="div" />
+              <FormControl>
+                <InputLabel id="color-select-label">Color</InputLabel>
+                <Field
+                  as={Select}
+                  name="color"
+                  labelId="color-select-label"
+                  value={values.color}
+                  onChange={handleChange}
+                  renderValue={(selected: string) => (
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <ColorBox sx={{ backgroundColor: selected }} />
+                      {colors.find(c => c.value === selected)?.label}
+                    </Box>
+                  )}
+                >
+                  {colors.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      <ColorBox sx={{ backgroundColor: option.value }} />
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Field>
+              </FormControl>
+              <ErrorMessage name="color" component="div" />
+              <Button type="submit" variant="contained" color="primary">
+                Create Event
+              </Button>
+            </FormContainer>
+          </Form>
+        )}
+      </Formik>
     </Container>
   );
 };
