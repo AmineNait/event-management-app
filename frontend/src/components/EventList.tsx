@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Typography, Card, CardContent, Grid } from '@mui/material';
-import { Event, EventListProps } from '../types';
+import { EventListProps } from '../types';
 
 const EventList: React.FC<EventListProps> = ({ events }) => {
   return (

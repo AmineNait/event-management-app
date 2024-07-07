@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Typography, Button, Box } from '@mui/material';
-import { Event, EventDetailsModalProps } from '../types';
+import { EventDetailsModalProps } from '../types';
 import moment from 'moment-timezone';
 import { StyledBox, colorBoxStyles } from './styles';
 

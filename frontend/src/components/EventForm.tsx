@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { TextField, Button, Container, Typography, Box, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { Event, EventFormProps } from '../types';
+import { EventFormProps } from '../types';
 import momentTimezone from 'moment-timezone';
 import { FormContainer, ColorBox, formControlStyles } from './styles';
 import { eventSchema } from '../validationSchema';
