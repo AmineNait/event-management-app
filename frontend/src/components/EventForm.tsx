@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { TextField, Button, Container, Typography, Box, MenuItem, Select, InputLabel, FormControl, styled } from '@mui/material';
 import { Event } from '../types';
+import momentTimezone from 'moment-timezone';
 
 interface EventFormProps {
   addEvent: (event: Event) => void;
@@ -20,25 +21,53 @@ const ColorBox = styled(Box)({
   borderRadius: '50%',
 });
 
+const timezones = [
+  'America/Denver',    
+  'America/New_York', 
+  'Europe/London',     
+  'Europe/Berlin',   
+  'Asia/Dubai',        
+  'Asia/Bangkok',   
+  'Asia/Tokyo',        
+  'Australia/Sydney'
+];
+
+const formattedTimezones = timezones.map(tz => {
+  const offset = momentTimezone.tz(tz).format('Z');
+  return {
+    label: `${tz} (UTC${offset})`,
+    value: tz,
+  };
+});
+
 const EventForm: React.FC<EventFormProps> = ({ addEvent }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [timezone, setTimezone] = useState('');
+  const [timezone, setTimezone] = useState('America/New_York'); // Default timezone
   const [color, setColor] = useState('#7cd992'); // Default color green
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/events', { name, description, startDate, endDate, timezone, color });
+      const startUTC = momentTimezone.tz(startDate, timezone).utc().format();
+      const endUTC = momentTimezone.tz(endDate, timezone).utc().format();
+      const response = await axios.post('http://localhost:3000/events', { 
+        name, 
+        description, 
+        startDate: startUTC, 
+        endDate: endUTC, 
+        timezone, 
+        color 
+      });
       addEvent(response.data);
       // Clear form after submission
       setName('');
       setDescription('');
       setStartDate('');
       setEndDate('');
-      setTimezone('');
+      setTimezone('America/New_York'); // Reset to default timezone
       setColor('#7cd992'); // Reset to default color green
     } catch (error) {
       console.error("There was an error creating the event!", error);
@@ -88,12 +117,22 @@ const EventForm: React.FC<EventFormProps> = ({ addEvent }) => {
           onChange={(e) => setEndDate(e.target.value)}
           required
         />
-        <TextField
-          label="Timezone"
-          value={timezone}
-          onChange={(e) => setTimezone(e.target.value)}
-          required
-        />
+        <FormControl required>
+          <InputLabel id="timezone-select-label">Timezone</InputLabel>
+          <Select
+            labelId="timezone-select-label"
+            value={timezone}
+            label="Timezone"
+            onChange={(e) => setTimezone(e.target.value as string)}
+            sx={{ textAlign: 'left' }}
+          >
+            {formattedTimezones.map((tz) => (
+              <MenuItem key={tz.value} value={tz.value}>
+                {tz.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <FormControl>
           <InputLabel id="color-select-label">Color</InputLabel>
           <Select
