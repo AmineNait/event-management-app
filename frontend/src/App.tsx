@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { CssBaseline, Container, Box, Typography } from '@mui/material';
+import axios from 'axios';
 import EventForm from './components/EventForm';
 import EventCalendar from './components/EventCalendar';
-import { CssBaseline, Container } from '@mui/material';
-import axios from 'axios';
-import { Event } from './types'; // Importez l'interface Event depuis src/types.ts
+import Header from './components/Header';
+import { Event } from './types';
 
 const App: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([]);
@@ -21,7 +22,7 @@ const App: React.FC = () => {
         }));
         setEvents(formattedEvents);
       } catch (error) {
-        console.error("There was an error fetching the events!", error);
+        console.error('There was an error fetching the events!', error);
       }
     };
 
@@ -29,21 +30,40 @@ const App: React.FC = () => {
   }, []);
 
   const addEvent = (event: Event) => {
-    setEvents(prevEvents => [...prevEvents, {
-      ...event,
-      title: event.name,
-      start: event.startDate,
-      end: event.endDate,
-      backgroundColor: event.color
-    }]);
+    setEvents(prevEvents => [
+      ...prevEvents,
+      {
+        ...event,
+        title: event.name,
+        start: event.startDate,
+        end: event.endDate,
+        backgroundColor: event.color
+      }
+    ]);
   };
 
   return (
     <div className="App">
       <CssBaseline />
+      <Header />
       <Container>
-        <EventForm addEvent={addEvent} />
-        <EventCalendar events={events} />
+        <Box my={4}>
+          <Typography variant="h2" component="h1" gutterBottom align="center">
+            Event Management
+          </Typography>
+        </Box>
+        <Box my={4}>
+          <EventForm addEvent={addEvent} />
+        </Box>
+        <Box my={4}>
+          <Typography variant="h4" component="h2" gutterBottom>
+            Event Calendar
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            Click on an event to see more details.
+          </Typography>
+          <EventCalendar events={events} />
+        </Box>
       </Container>
     </div>
   );

@@ -1,11 +1,24 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { TextField, Button, Container, Typography, Box, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
-import { Event } from '../types'; // Importez l'interface Event depuis src/types.ts
+import { TextField, Button, Container, Typography, Box, MenuItem, Select, InputLabel, FormControl, styled } from '@mui/material';
+import { Event } from '../types';
 
 interface EventFormProps {
   addEvent: (event: Event) => void;
 }
+
+const FormContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing(2),
+}));
+
+const ColorBox = styled(Box)({
+  width: 24,
+  height: 24,
+  marginRight: 8,
+  borderRadius: '50%',
+});
 
 const EventForm: React.FC<EventFormProps> = ({ addEvent }) => {
   const [name, setName] = useState('');
@@ -13,7 +26,7 @@ const EventForm: React.FC<EventFormProps> = ({ addEvent }) => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [timezone, setTimezone] = useState('');
-  const [color, setColor] = useState('#0000ff'); 
+  const [color, setColor] = useState('#7cd992'); // Default color green
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -26,14 +39,13 @@ const EventForm: React.FC<EventFormProps> = ({ addEvent }) => {
       setStartDate('');
       setEndDate('');
       setTimezone('');
-      setColor('#0000ff'); 
+      setColor('#7cd992'); // Reset to default color green
     } catch (error) {
       console.error("There was an error creating the event!", error);
     }
   };
 
   const colors = [
-    { label: 'Blue', value: '#0000ff' },
     { label: 'Green', value: '#7cd992' },
     { label: 'Red', value: '#eb6060' },
     { label: 'Yellow', value: '#f7e463' }
@@ -44,7 +56,7 @@ const EventForm: React.FC<EventFormProps> = ({ addEvent }) => {
       <Typography variant="h4" component="h1" gutterBottom>
         Create Event
       </Typography>
-      <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <FormContainer component="form" onSubmit={handleSubmit}>
         <TextField
           label="Name"
           value={name}
@@ -91,30 +103,14 @@ const EventForm: React.FC<EventFormProps> = ({ addEvent }) => {
             onChange={(e) => setColor(e.target.value)}
             renderValue={(selected) => (
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Box
-                  sx={{
-                    width: 24,
-                    height: 24,
-                    backgroundColor: selected,
-                    marginRight: 1,
-                    borderRadius: '50%'
-                  }}
-                />
+                <ColorBox sx={{ backgroundColor: selected }} />
                 {colors.find(c => c.value === selected)?.label}
               </Box>
             )}
           >
             {colors.map((option) => (
               <MenuItem key={option.value} value={option.value}>
-                <Box
-                  sx={{
-                    width: 24,
-                    height: 24,
-                    backgroundColor: option.value,
-                    marginRight: 1,
-                    borderRadius: '50%'
-                  }}
-                />
+                <ColorBox sx={{ backgroundColor: option.value }} />
                 {option.label}
               </MenuItem>
             ))}
@@ -123,7 +119,7 @@ const EventForm: React.FC<EventFormProps> = ({ addEvent }) => {
         <Button type="submit" variant="contained" color="primary">
           Create Event
         </Button>
-      </Box>
+      </FormContainer>
     </Container>
   );
 };
