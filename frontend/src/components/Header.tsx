@@ -1,21 +1,13 @@
-// src/components/Header.tsx
 import React from 'react';
-import { AppBar, Toolbar, Typography, styled } from '@mui/material';
-
-const StyledAppBar = styled(AppBar)({
-  backgroundColor: 'black',
-});
-
-const StyledToolbar = styled(Toolbar)({
-  justifyContent: 'center',
-});
+import { Typography } from '@mui/material';
+import { StyledAppBar, StyledToolbar } from './styles';
 
 const Header: React.FC = () => {
   return (
     <StyledAppBar position="static">
       <StyledToolbar>
         <Typography variant="h6">
-          Event Management App
+          Kumojin Test App
         </Typography>
       </StyledToolbar>
     </StyledAppBar>

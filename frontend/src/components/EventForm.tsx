@@ -1,30 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { TextField, Button, Container, Typography, Box, MenuItem, Select, InputLabel, FormControl, styled } from '@mui/material';
-import { Event } from '../types';
+import { TextField, Button, Container, Typography, Box, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import { Event, EventFormProps } from '../types';
 import momentTimezone from 'moment-timezone';
-
-interface EventFormProps {
-  addEvent: (event: Event) => void;
-}
-
-const FormContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: theme.spacing(2),
-  padding: theme.spacing(3),
-  border: '1px solid #ddd',
-  borderRadius: '8px',
-  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-  backgroundColor: '#fff'
-}));
-
-const ColorBox = styled(Box)({
-  width: 24,
-  height: 24,
-  marginRight: 8,
-  borderRadius: '50%',
-});
+import { FormContainer, ColorBox, formControlStyles } from './styles';
 
 const timezones = [
   'America/Denver',
@@ -67,7 +46,6 @@ const EventForm: React.FC<EventFormProps> = ({ addEvent }) => {
         color 
       });
       addEvent(response.data);
-      // Clear form after submission
       setName('');
       setDescription('');
       setStartDate('');
@@ -129,7 +107,7 @@ const EventForm: React.FC<EventFormProps> = ({ addEvent }) => {
             value={timezone}
             label="Timezone"
             onChange={(e) => setTimezone(e.target.value as string)}
-            sx={{ textAlign: 'left' }}
+            sx={formControlStyles}
           >
             {formattedTimezones.map((tz) => (
               <MenuItem key={tz.value} value={tz.value}>

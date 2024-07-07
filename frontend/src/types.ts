@@ -19,3 +19,21 @@ export interface CalendarEvent {
     color: string;
   };
 }
+
+export interface EventDetailsModalProps {
+  event: Event | null;
+  open: boolean;
+  onClose: () => void;
+}
+
+export interface EventFormProps {
+  addEvent: (event: Event) => void;
+}
+
+export interface EventListProps {
+  events: Event[];
+}
+
+export interface EventCalendarProps {
+  events: Event[];
+}

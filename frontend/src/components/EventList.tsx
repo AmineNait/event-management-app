@@ -1,10 +1,6 @@
 import React from 'react';
 import { Container, Typography, Card, CardContent, Grid } from '@mui/material';
-import { Event } from '../types'; // Importez l'interface Event depuis src/types.ts
-
-interface EventListProps {
-  events: Event[];
-}
+import { Event, EventListProps } from '../types';
 
 const EventList: React.FC<EventListProps> = ({ events }) => {
   return (

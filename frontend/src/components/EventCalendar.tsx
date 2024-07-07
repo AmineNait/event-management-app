@@ -2,37 +2,21 @@ import React, { useState } from 'react';
 import { Calendar, momentLocalizer, Event as BigCalendarEvent } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { Event, CalendarEvent } from '../types';
+import { Event, CalendarEvent, EventCalendarProps } from '../types';
 import EventDetailsModal from './EventDetailsModal';
 import momentTimezone from 'moment-timezone';
-import { Typography, Box, styled } from '@mui/material';
+import { Typography } from '@mui/material';
+import { CalendarContainer, calendarStyles } from './styles';
 
 const localizer = momentLocalizer(moment);
-
-interface EventCalendarProps {
-  events: Event[];
-}
-
-const CalendarContainer = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(3),
-  border: '1px solid #ddd',
-  borderRadius: '8px',
-  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-  backgroundColor: '#fff',
-  marginTop: theme.spacing(4)
-}));
 
 const EventCalendar: React.FC<EventCalendarProps> = ({ events }) => {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
   const calendarEvents: CalendarEvent[] = events.map(event => {
-    // Convert start and end dates from UTC to EST
     const start = momentTimezone.tz(event.startDate, 'UTC').tz('America/New_York').toDate();
     const end = momentTimezone.tz(event.endDate, 'UTC').tz('America/New_York').toDate();
-    
-    console.log(`Original start: ${event.startDate}, converted start: ${start}`);
-    console.log(`Original end: ${event.endDate}, converted end: ${end}`);
     
     return {
       title: event.name,
@@ -47,7 +31,7 @@ const EventCalendar: React.FC<EventCalendarProps> = ({ events }) => {
   });
 
   const eventStyleGetter = (event: BigCalendarEvent) => {
-    const backgroundColor = event.resource.color || '#00ff00'; // Default color green
+    const backgroundColor = event.resource.color || '#00ff00';
     const style = {
       backgroundColor,
       borderRadius: '5px',
@@ -79,7 +63,7 @@ const EventCalendar: React.FC<EventCalendarProps> = ({ events }) => {
         events={calendarEvents}
         startAccessor="start"
         endAccessor="end"
-        style={{ height: '500px' }}
+        style={calendarStyles}
         eventPropGetter={eventStyleGetter}
         onSelectEvent={handleSelectEvent}
       />

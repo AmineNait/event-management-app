@@ -1,25 +1,8 @@
 import React from 'react';
-import { Modal, Box, Typography, Button, styled } from '@mui/material';
-import { Event } from '../types';
+import { Modal, Typography, Button, Box } from '@mui/material';
+import { Event, EventDetailsModalProps } from '../types';
 import moment from 'moment-timezone';
-
-interface EventDetailsModalProps {
-  event: Event | null;
-  open: boolean;
-  onClose: () => void;
-}
-
-const StyledBox = styled(Box)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 400px;
-  background-color: white;
-  border: 2px solid #000;
-  box-shadow: 24px;
-  padding: 16px 32px 24px;
-`;
+import { StyledBox, colorBoxStyles } from './styles';
 
 const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, open, onClose }) => {
   if (!event) return null;
@@ -54,7 +37,7 @@ const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, open, onCl
           <strong>End (EST):</strong> {endEST}
         </Typography>
         <Typography variant="body1" sx={{ mt: 2 }}>
-          <strong>Color:</strong> <Box component="span" sx={{ backgroundColor: event.color, padding: '0 10px', borderRadius: '5px', color: 'white' }}>{event.color}</Box>
+          <strong>Color:</strong> <Box component="span" sx={colorBoxStyles(event.color)}>{event.color}</Box>
         </Typography>
         <Button onClick={onClose} variant="contained" color="primary" sx={{ mt: 2 }}>
           Close
