@@ -4,6 +4,7 @@ import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './swagger';
 import eventRoutes from './routes/events';
+import errorHandler from './middleware/errorHandler';
 
 const app = express();
 app.use(express.json());
@@ -22,7 +23,13 @@ mongoose.connect('mongodb://localhost:27017/events')
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/events', eventRoutes);
 
+app.use(errorHandler);
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
+
+export { app };
