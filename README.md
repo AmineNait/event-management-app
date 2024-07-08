@@ -107,6 +107,7 @@ backend/
 ├── tsconfig.json
 └── README.md
 
+
 - `src/models`: Définit les schémas Mongoose pour les événements.
 - `src/routes`: Contient les routes de l'API REST.
 - `src/middleware`: Contient les middlewares personnalisés.
