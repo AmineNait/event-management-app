@@ -89,12 +89,54 @@ La documentation de l'API est générée automatiquement avec Swagger.
 ## Structure des Dossiers
 
 ### Backend
+
+backend/
+├── src/
+│   ├── app.ts
+│   ├── middleware/
+│   │   └── errorHandler.ts
+│   ├── models/
+│   │   └── Event.ts
+│   ├── routes/
+│   │   └── events.ts
+│   ├── swagger.ts
+│   └── tests/
+│       └── routes/
+│           └── events.test.ts
+├── package.json
+├── tsconfig.json
+└── README.md
+
 - `src/models`: Définit les schémas Mongoose pour les événements.
 - `src/routes`: Contient les routes de l'API REST.
 - `src/middleware`: Contient les middlewares personnalisés.
 - `src/tests`: Contient les tests unitaires et d'intégration.
 
 ### Frontend
+
+frontend/
+├── src/
+│   ├── components/
+│   │   ├── EventCalendar.tsx
+│   │   ├── EventDetailsModal.tsx
+│   │   ├── EventForm.tsx
+│   │   ├── EventList.tsx
+│   │   ├── Header.tsx
+│   │   └── styles.ts
+│   ├── App.tsx
+│   ├── index.css
+│   ├── index.tsx
+│   ├── types.ts
+│   └── tests/
+│       ├── EventCalendar.test.tsx
+│       ├── EventDetailsModal.test.tsx
+│       ├── EventForm.test.tsx
+│       ├── EventList.test.tsx
+│       └── Header.test.tsx
+├── package.json
+├── tsconfig.json
+└── README.md
+
 - `src/components`: Contient les composants React.
 - `src/tests`: Contient les tests unitaires pour les composants.
 
