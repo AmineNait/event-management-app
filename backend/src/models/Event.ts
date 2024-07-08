@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 
+// Schéma de l'événement dans MongoDB
 const eventSchema = new Schema({
   name: { type: String, required: true, maxlength: 32 },
   description: { type: String, required: true },

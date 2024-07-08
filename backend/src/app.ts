@@ -7,9 +7,10 @@ import eventRoutes from './routes/events';
 import errorHandler from './middleware/errorHandler';
 
 const app = express();
+// parser le JSON
 app.use(express.json());
 
-// Utilisez cors pour permettre les requêtes cross-origin
+// pour permettre les requêtes cross-origin
 app.use(cors());
 
 mongoose.connect('mongodb://localhost:27017/events')
@@ -23,6 +24,7 @@ mongoose.connect('mongodb://localhost:27017/events')
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/events', eventRoutes);
 
+// Middleware de gestion des erreurs
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;

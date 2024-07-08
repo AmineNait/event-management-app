@@ -3,6 +3,7 @@ import request from 'supertest';
 import { app } from '../../app';
 import { Event } from '../../models/Event';
 
+// Configuration avant les tests
 beforeAll(async () => {
   if (mongoose.connection.readyState === 0) {
     const url = 'mongodb://127.0.0.1/event-test';
@@ -10,6 +11,7 @@ beforeAll(async () => {
   }
 });
 
+// Nettoyage après les tests
 afterAll(async () => {
   await mongoose.connection.close();
 });
@@ -18,6 +20,7 @@ beforeEach(async () => {
   await Event.deleteMany();
 });
 
+// Test de la création d'un nouvel événement
 test('should create a new event', async () => {
   const eventData = {
     name: 'Test Event',
@@ -43,6 +46,7 @@ test('should create a new event', async () => {
   }));
 });
 
+// Test de l'obtention de tous les événements
 test('should get all events', async () => {
   const eventData1 = new Event({
     name: 'Test Event 1',
@@ -52,6 +56,7 @@ test('should get all events', async () => {
     timezone: 'America/New_York',
     color: '#7cd992'
   });
+
   const eventData2 = new Event({
     name: 'Test Event 2',
     description: 'Test Description 2',
@@ -68,7 +73,7 @@ test('should get all events', async () => {
     .get('/events')
     .expect(200);
 
-  expect(response.body.length).toBe(2);
+  expect(response.body.length).toBe(2); // Vérification du nombre d'événements
   expect(response.body[0]).toMatchObject(expect.objectContaining({
     name: 'Test Event 1',
     description: 'Test Description 1',
@@ -87,6 +92,7 @@ test('should get all events', async () => {
   }));
 });
 
+// Test de l'obtention d'un événement par ID
 test('should get a single event by id', async () => {
   const eventData = new Event({
     name: 'Test Event',

@@ -1,7 +1,8 @@
-import React from 'react';
-import { Container, Typography, Card, CardContent, Grid } from '@mui/material';
-import { EventListProps } from '../types';
+import React from "react";
+import { Container, Typography, Card, CardContent, Grid } from "@mui/material";
+import { EventListProps } from "../types";
 
+// Composant pour afficher la liste des événements
 const EventList: React.FC<EventListProps> = ({ events }) => {
   return (
     <Container maxWidth="md">
@@ -9,7 +10,7 @@ const EventList: React.FC<EventListProps> = ({ events }) => {
         Event List
       </Typography>
       <Grid container spacing={2}>
-        {events.map(event => (
+        {events.map((event) => (
           <Grid item xs={12} sm={6} md={4} key={event._id}>
             <Card sx={{ backgroundColor: event.color }}>
               <CardContent>

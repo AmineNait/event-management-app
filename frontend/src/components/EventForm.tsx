@@ -1,35 +1,58 @@
-import React from 'react';
-import axios from 'axios';
-import { TextField, Button, Container, Typography, Box, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { EventFormProps } from '../types';
-import momentTimezone from 'moment-timezone';
-import { FormContainer, ColorBox, formControlStyles } from './styles';
-import { eventSchema } from '../validationSchema';
-import { colors, formattedTimezones } from '../constants';
+import React from "react";
+import axios from "axios";
+import {
+  TextField,
+  Button,
+  Container,
+  Typography,
+  Box,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+} from "@mui/material";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import { EventFormProps } from "../types";
+import momentTimezone from "moment-timezone";
+import { FormContainer, ColorBox, formControlStyles } from "./styles";
+import { eventSchema } from "../validationSchema";
+import { colors, formattedTimezones } from "../constants";
 
+// Composant pour le formulaire de création d'événement
 const EventForm: React.FC<EventFormProps> = ({ addEvent }) => {
   const initialValues = {
-    name: '',
-    description: '',
-    startDate: '',
-    endDate: '',
-    timezone: 'America/New_York',
-    color: '#7cd992',
+    name: "",
+    description: "",
+    startDate: "",
+    endDate: "",
+    timezone: "America/New_York",
+    color: "#7cd992",
   };
 
-  const handleSubmit = async (values: typeof initialValues, { resetForm }: { resetForm: () => void }) => {
+  // Fonction de gestion de la soumission du formulaire
+  const handleSubmit = async (
+    values: typeof initialValues,
+    { resetForm }: { resetForm: () => void }
+  ) => {
     try {
-      const startUTC = momentTimezone.tz(values.startDate, values.timezone).utc().format();
-      const endUTC = momentTimezone.tz(values.endDate, values.timezone).utc().format();
-      const response = await axios.post('http://localhost:3000/events', { 
-        name: values.name, 
-        description: values.description, 
-        startDate: startUTC, 
-        endDate: endUTC, 
-        timezone: values.timezone, 
-        color: values.color 
+      const startUTC = momentTimezone
+        .tz(values.startDate, values.timezone)
+        .utc()
+        .format();
+      const endUTC = momentTimezone
+        .tz(values.endDate, values.timezone)
+        .utc()
+        .format();
+      const response = await axios.post("http://localhost:3000/events", {
+        name: values.name,
+        description: values.description,
+        startDate: startUTC,
+        endDate: endUTC,
+        timezone: values.timezone,
+        color: values.color,
       });
+
+      // Ajout de l'événement créé à la liste des événements
       addEvent(response.data);
       resetForm();
     } catch (error) {
@@ -120,9 +143,9 @@ const EventForm: React.FC<EventFormProps> = ({ addEvent }) => {
                   value={values.color}
                   onChange={handleChange}
                   renderValue={(selected: string) => (
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
                       <ColorBox sx={{ backgroundColor: selected }} />
-                      {colors.find(c => c.value === selected)?.label}
+                      {colors.find((c) => c.value === selected)?.label}
                     </Box>
                   )}
                 >

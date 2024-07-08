@@ -1,44 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import { CssBaseline, Container, Box, Typography } from '@mui/material';
-import axios from 'axios';
-import EventForm from './components/EventForm';
-import EventCalendar from './components/EventCalendar';
-import Header from './components/Header';
-import { Event } from './types';
+import React, { useState, useEffect } from "react";
+import { CssBaseline, Container, Box, Typography } from "@mui/material";
+import axios from "axios";
+import EventForm from "./components/EventForm";
+import EventCalendar from "./components/EventCalendar";
+import Header from "./components/Header";
+import { Event } from "./types";
 
 const App: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([]);
 
+  // Utilisation de useEffect pour récupérer les événements à partir de l'API lors du montage du composant
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/events');
+        const response = await axios.get("http://localhost:3000/events");
         const formattedEvents = response.data.map((event: Event) => ({
           ...event,
           title: event.name,
           start: event.startDate,
           end: event.endDate,
-          backgroundColor: event.color
+          backgroundColor: event.color,
         }));
         setEvents(formattedEvents);
       } catch (error) {
-        console.error('There was an error fetching the events!', error);
+        console.error("There was an error fetching the events!", error);
       }
     };
 
     fetchEvents();
   }, []);
 
+  // Fonction pour ajouter un nouvel événement à la liste des événements
   const addEvent = (event: Event) => {
-    setEvents(prevEvents => [
+    setEvents((prevEvents) => [
       ...prevEvents,
       {
         ...event,
         title: event.name,
         start: event.startDate,
         end: event.endDate,
-        backgroundColor: event.color
-      }
+        backgroundColor: event.color,
+      },
     ]);
   };
 
