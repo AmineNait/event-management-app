@@ -39,7 +39,7 @@ export interface EventCalendarProps {
 }
 
 export enum EventColor {
-  Green = '#7cd992',
-  Red = '#eb6060',
-  Yellow = '#f7e463'
+  Green = "#7cd992",
+  Red = "#eb6060",
+  Yellow = "#f7e463",
 }

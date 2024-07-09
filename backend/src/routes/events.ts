@@ -1,6 +1,6 @@
-import express, { Request, Response } from 'express';
-import { body, validationResult } from 'express-validator';
-import { Event } from '../models/Event';
+import express, { Request, Response } from "express";
+import { body, validationResult } from "express-validator";
+import { Event } from "../models/Event";
 
 const router = express.Router();
 
@@ -52,14 +52,14 @@ const router = express.Router();
  *         description: Internal server error
  */
 router.post(
-  '/',
+  "/",
   [
-    body('name').isString().isLength({ max: 32 }),
-    body('description').isString(),
-    body('startDate').isISO8601(),
-    body('endDate').isISO8601(),
-    body('timezone').isString(),
-    body('color').isString()
+    body("name").isString().isLength({ max: 32 }),
+    body("description").isString(),
+    body("startDate").isISO8601(),
+    body("endDate").isISO8601(),
+    body("timezone").isString(),
+    body("color").isString(),
   ],
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
@@ -69,11 +69,18 @@ router.post(
 
     const { name, description, startDate, endDate, timezone, color } = req.body;
     try {
-      const event = new Event({ name, description, startDate, endDate, timezone, color });
+      const event = new Event({
+        name,
+        description,
+        startDate,
+        endDate,
+        timezone,
+        color,
+      });
       await event.save();
       res.status(201).send(event);
     } catch (error) {
-      res.status(500).send('Erreur lors de la création de l\'événement');
+      res.status(500).send("Erreur lors de la création de l'événement");
     }
   }
 );
@@ -96,12 +103,12 @@ router.post(
  *       500:
  *         description: Internal server error
  */
-router.get('/', async (req: Request, res: Response) => {
+router.get("/", async (req: Request, res: Response) => {
   try {
     const events = await Event.find();
     res.send(events);
   } catch (error) {
-    res.status(500).send('Erreur lors de la récupération des événements');
+    res.status(500).send("Erreur lors de la récupération des événements");
   }
 });
 
@@ -130,15 +137,15 @@ router.get('/', async (req: Request, res: Response) => {
  *       500:
  *         description: Internal server error
  */
-router.get('/:id', async (req: Request, res: Response) => {
+router.get("/:id", async (req: Request, res: Response) => {
   try {
     const event = await Event.findById(req.params.id);
     if (!event) {
-      return res.status(404).send('Événement non trouvé');
+      return res.status(404).send("Événement non trouvé");
     }
     res.send(event);
   } catch (error) {
-    res.status(500).send('Erreur lors de la récupération de l\'événement');
+    res.status(500).send("Erreur lors de la récupération de l'événement");
   }
 });
 

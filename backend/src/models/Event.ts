@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model } from "mongoose";
 
 // Schéma de l'événement dans MongoDB
 const eventSchema = new Schema({
@@ -7,7 +7,7 @@ const eventSchema = new Schema({
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },
   timezone: { type: String, required: true },
-  color: { type: String, required: true }
+  color: { type: String, required: true },
 });
 
-export const Event = model('Event', eventSchema);
+export const Event = model("Event", eventSchema);
