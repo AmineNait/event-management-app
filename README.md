@@ -1,7 +1,7 @@
 # Event Management App
 
 ## Description
-Ce projet est une application de gestion d'événements développée dans le cadre d'un test technique pour une embauche chez Kumojin. L'application permet de créer, afficher et gérer des événements via une interface utilisateur et une API REST.
+Ce projet est une application de gestion d'événements développée pour Kumojin. L'application permet de créer, afficher et gérer des événements via une interface utilisateur et une API REST.
 
 ## Prérequis
 - Node.js (version 14 ou supérieure)
