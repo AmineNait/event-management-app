@@ -1,19 +1,25 @@
 import mongoose from "mongoose";
 import request from "supertest";
+import { MongoMemoryServer } from "mongodb-memory-server";
 import { app } from "../../app";
 import { Event } from "../../models/Event";
 
+let mongoServer: MongoMemoryServer;
+
 // Configuration avant les tests
 beforeAll(async () => {
+  mongoServer = await MongoMemoryServer.create();
+  const mongoUri = mongoServer.getUri();
+
   if (mongoose.connection.readyState === 0) {
-    const url = "mongodb://127.0.0.1/event-test";
-    await mongoose.connect(url);
+    await mongoose.connect(mongoUri);
   }
 });
 
 // Nettoyage après les tests
 afterAll(async () => {
-  await mongoose.connection.close();
+  await mongoose.disconnect();
+  await mongoServer.stop();
 });
 
 beforeEach(async () => {
