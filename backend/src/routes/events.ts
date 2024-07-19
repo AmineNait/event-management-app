@@ -56,8 +56,22 @@ router.post(
   [
     body("name").isString().isLength({ max: 32 }),
     body("description").isString(),
-    body("startDate").isISO8601(),
-    body("endDate").isISO8601(),
+    body("startDate")
+      .isISO8601()
+      .custom((value: string) => {
+        if (new Date(value) < new Date()) {
+          throw new Error("Start date must be in the future");
+        }
+        return true;
+      }),
+    body("endDate")
+      .isISO8601()
+      .custom((value: string, { req }) => {
+        if (new Date(value) <= new Date(req.body.startDate)) {
+          throw new Error("End date must be after start date");
+        }
+        return true;
+      }),
     body("timezone").isString(),
     body("color").isString(),
   ],
@@ -103,7 +117,7 @@ router.post(
  *       500:
  *         description: Internal server error
  */
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", async (_req: Request, res: Response) => {
   try {
     const events = await Event.find();
     res.send(events);
