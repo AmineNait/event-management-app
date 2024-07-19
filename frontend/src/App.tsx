@@ -1,34 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { CssBaseline, Container, Box, Typography } from "@mui/material";
-import axios from "axios";
 import EventForm from "./components/EventForm";
 import EventCalendar from "./components/EventCalendar";
 import Header from "./components/Header";
+import useFetchEvents from "./hooks/useFetchEvents";
 import { Event } from "./types";
 
 const App: React.FC = () => {
-  const [events, setEvents] = useState<Event[]>([]);
+  const { events, loading, error, setEvents } = useFetchEvents();
 
-  // Utilisation de useEffect pour récupérer les événements à partir de l'API lors du montage du composant
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await axios.get("http://localhost:3000/events");
-        const formattedEvents = response.data.map((event: Event) => ({
-          ...event,
-          title: event.name,
-          start: event.startDate,
-          end: event.endDate,
-          backgroundColor: event.color,
-        }));
-        setEvents(formattedEvents);
-      } catch (error) {
-        console.error("There was an error fetching the events!", error);
-      }
-    };
-
-    fetchEvents();
-  }, []);
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
 
   // Fonction pour ajouter un nouvel événement à la liste des événements
   const addEvent = (event: Event) => {
