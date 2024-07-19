@@ -1,5 +1,11 @@
+// jest.config.js
 module.exports = {
-  preset: "ts-jest",
-  testEnvironment: "jsdom",
-  setupFilesAfterEnv: ["<rootDir>/src/setupTests.ts"],
+  testEnvironment: "jest-environment-jsdom",
+  transform: {
+    "^.+\\.(ts|tsx)$": "ts-jest",
+  },
+  moduleNameMapper: {
+    "\\.(css|less|scss|sass)$": "jest-transform-stub",
+  },
+  transformIgnorePatterns: ["node_modules/(?!react-big-calendar)"],
 };
