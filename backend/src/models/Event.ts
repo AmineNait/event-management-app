@@ -20,7 +20,7 @@ const eventSchema = new Schema<IEvent>({
       validator: (value: Date) => {
         return value >= new Date();
       },
-      message: "Start date must be in the future",
+      message: "La date de début doit être dans le futur",
     },
   },
   endDate: {
@@ -30,7 +30,7 @@ const eventSchema = new Schema<IEvent>({
       validator: function (this: IEvent, value: Date) {
         return value > this.startDate;
       },
-      message: "End date must be after start date",
+      message: "La date de fin doit être après la date de début",
     },
   },
   timezone: { type: String, required: true },
