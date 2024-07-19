@@ -1,6 +1,10 @@
 import express, { Request, Response } from "express";
 import { body, validationResult } from "express-validator";
-import { Event } from "../models/Event";
+import {
+  createEvent,
+  getAllEvents,
+  getEventById,
+} from "../services/eventService";
 
 const router = express.Router();
 
@@ -51,6 +55,7 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
+
 router.post(
   "/",
   [
@@ -60,7 +65,7 @@ router.post(
       .isISO8601()
       .custom((value: string) => {
         if (new Date(value) < new Date()) {
-          throw new Error("Start date must be in the future");
+          throw new Error("La date de début doit être dans le futur");
         }
         return true;
       }),
@@ -68,7 +73,7 @@ router.post(
       .isISO8601()
       .custom((value: string, { req }) => {
         if (new Date(value) <= new Date(req.body.startDate)) {
-          throw new Error("End date must be after start date");
+          throw new Error("La date de fin doit être après la date de début");
         }
         return true;
       }),
@@ -83,7 +88,7 @@ router.post(
 
     const { name, description, startDate, endDate, timezone, color } = req.body;
     try {
-      const event = new Event({
+      const event = await createEvent({
         name,
         description,
         startDate,
@@ -91,7 +96,6 @@ router.post(
         timezone,
         color,
       });
-      await event.save();
       res.status(201).send(event);
     } catch (error) {
       res.status(500).send("Erreur lors de la création de l'événement");
@@ -119,7 +123,7 @@ router.post(
  */
 router.get("/", async (_req: Request, res: Response) => {
   try {
-    const events = await Event.find();
+    const events = await getAllEvents();
     res.send(events);
   } catch (error) {
     res.status(500).send("Erreur lors de la récupération des événements");
@@ -153,7 +157,7 @@ router.get("/", async (_req: Request, res: Response) => {
  */
 router.get("/:id", async (req: Request, res: Response) => {
   try {
-    const event = await Event.findById(req.params.id);
+    const event = await getEventById(req.params.id);
     if (!event) {
       return res.status(404).send("Événement non trouvé");
     }
